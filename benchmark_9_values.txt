@@ -1,0 +1,224 @@
+##################################################
+BASE AVEC 2000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.00011682510375976562 secondes.
+Temps de connexion à la base de données sqlite:
+9.894371032714844e-05 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00005868 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00005986 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00006794 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00006655 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00194897 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00014007 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00180889 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.00016185 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00194145 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00015970 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00178175 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.00201578 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00012090 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.00189488 secondes.
+
+
+##################################################
+BASE AVEC 25000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.00024509429931640625 secondes.
+Temps de connexion à la base de données sqlite:
+0.00014901161193847656 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00006675 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00006957 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00007210 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00006777 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00195194 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00014429 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00180765 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.00124159 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00194129 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00016048 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00178081 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.00319907 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00011955 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.00307952 secondes.
+
+
+##################################################
+BASE AVEC 50000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.000141143798828125 secondes.
+Temps de connexion à la base de données sqlite:
+9.799003601074219e-05 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00007262 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00006742 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00007124 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00006640 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00192230 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00013426 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00178805 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.00241431 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00202706 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00015911 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00186795 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.00466543 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00012470 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.00454074 secondes.
+
+
+##################################################
+BASE AVEC 75000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.0001518726348876953 secondes.
+Temps de connexion à la base de données sqlite:
+0.00018596649169921875 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00007161 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00006881 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00007088 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00007159 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00191275 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00013448 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00177827 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.00365220 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00203451 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00015854 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00187597 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.00564450 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00012598 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.00551852 secondes.
+
+
+##################################################
+BASE AVEC 100000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.00015401840209960938 secondes.
+Temps de connexion à la base de données sqlite:
+0.00011396408081054688 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00007447 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00007534 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00007321 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00008430 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00190681 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00013809 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00176872 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.00549935 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00203627 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00015946 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00187681 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.00762125 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00013895 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.00748230 secondes.
+
+
+##################################################
+BASE AVEC 125000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.0001461505889892578 secondes.
+Temps de connexion à la base de données sqlite:
+0.00011515617370605469 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00007239 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00008068 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00014292 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00012219 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00195971 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00013774 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00182198 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.00682239 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00206820 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00015941 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00190879 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.00901257 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00013464 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.00887793 secondes.
+
+
+##################################################
+BASE AVEC 150000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.00014901161193847656 secondes.
+Temps de connexion à la base de données sqlite:
+0.00011491775512695312 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00007036 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00006861 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00007728 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00009460 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00195471 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00013729 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00181742 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.00799444 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00202827 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00015745 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00187082 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.01034057 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00014067 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.01019990 secondes.
+
+
+##################################################
+BASE AVEC 175000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.000141143798828125 secondes.
+Temps de connexion à la base de données sqlite:
+0.00011777877807617188 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00007445 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00006917 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00007293 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00006870 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00193991 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00013520 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00180472 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.00968509 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00210892 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00016149 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00194743 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.01173997 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00013893 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.01160104 secondes.
+
+
+##################################################
+BASE AVEC 200000 DONNEES 
+##################################################
+
+
+Temps de connexion à la base de données redis:
+0.00014209747314453125 secondes.
+Temps de connexion à la base de données sqlite:
+0.00011420249938964844 secondes.
+Temps d'insertion en moyenne sur cent données sur Redis:                 0.00007558 secondes.
+Temps de récupération en moyenne sur cent données sur Redis:             0.00008694 secondes.
+Temps de modification en moyenne sur cent données sur Redis:             0.00012818 secondes.
+Temps de suppression en moyenne sur cent données sur Redis:              0.00012075 secondes.
+Temps d'insertion en moyenne sur cent données sur SQLite:                0.00194371 secondes.
+--- Temps d'insertion de la première table en moyenne sur cent données sur SQLite: 0.00013733 secondes.
+--- Temps d'insertion de la seconde table en moyenne sur cent données sur SQLite:  0.00180638 secondes.
+Temps de récupération en moyenne sur cent données sur SQLite:            0.01107317 secondes.
+Temps de modification en moyenne sur cent données sur SQLite:            0.00208246 secondes.
+--- Temps de modification de la première table en moyenne sur cent données sur SQLite: 0.00016568 secondes.
+--- Temps de modification de la seconde table en moyenne sur cent données sur SQLite:  0.00191677 secondes.
+Temps de suppression en moyenne sur cent données sur SQLite:             0.01327653 secondes.
+--- Temps de suppression de la première table en moyenne sur cent données sur SQLite:  0.00014712 secondes.
+--- Temps de suppression de la seconde table en moyenne sur cent données sur SQLite:   0.01312940 secondes.
+

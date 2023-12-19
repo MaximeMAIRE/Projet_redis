@@ -69,7 +69,7 @@ Passer en MySQL:
 
 # Objectifs
 
-Chaque case est remplie avec le résultat pour une moyenne sur 100 requêtes.
+Chaque case est remplie avec le résultat pour une moyenne sur 1000 requêtes.
 
 xxxxxxx |                 redis              |                sqlite             |
 ----------------------------------------------------------------------------------
@@ -77,12 +77,7 @@ xxxxxxxx | Insert | Select | Update | Delete | Insert | Select | Update | Delete
 ----------------------------------------------------------------------------------
 Python   |        |        |        |        |        |        |        |        |
 ----------------------------------------------------------------------------------
-redis-cli|        |        |        |        |        |        |        |        |
-----------------------------------------------------------------------------------
-bash     |        |        |        |        |        |        |        |        |
-----------------------------------------------------------------------------------
 
-On a oublié les UPDATE et les DELETE.
 
 --------------------------------------------------------
 
@@ -108,7 +103,9 @@ La connexion à Redis est plus lente que pour la base de données sqlite, en rev
 
 
 --------------------------------------------------------
-# TÂCHES BONUS
+# TÂCHES RESTANTES
 
-Comparer avec un autre système SQL
-Comparer avec Python et redis-cli pur (avec MULTI)
+- Convertir en .ipynb
+- Indexation
+- Fragmentation & réplication
+- Rapport

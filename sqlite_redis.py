@@ -270,6 +270,21 @@ for data in list_nb_data:
     redis_perfs.append(perfs[0])
     sqlite_perfs.append(perfs[1])
     
+    
+    
+df_redis_perf = pd.DataFrame({
+    'nb_data': list_nb_data * 4,  # Repeat list_nb_data four times for each type of operation
+    'Performance': sum(redis_perf, []),  # Flatten the list of lists
+    'Operation': ['Insertion'] * len(list_nb_data) + ['Selection'] * len(list_nb_data) + ['Modification'] * len(list_nb_data) + ['Suppression'] * len(list_nb_data)
+})
+
+# Plot using Plotly Express
+fig = px.line(df_redis_perf, x='nb_data', y='Performance', color='Operation', line_group='Operation',
+              labels={'Performance': 'Time (seconds)', 'nb_data': 'Number of Data Points'},
+              title='Redis Performance Metrics')
+
+# Show the plot
+fig.show()
 # d_redis = {
 #     'nb_data': list_nb_data,
 #     'Insertion': [redis_perfs[0][0], redis_perfs[1][0], redis_perfs[2][0], redis_perfs[3][0], redis_perfs[4][0], redis_perfs[5][0]], 
@@ -278,19 +293,18 @@ for data in list_nb_data:
 #      'Suppression': [redis_perfs[0][3], redis_perfs[1][3], redis_perfs[2][3], redis_perfs[3][3], redis_perfs[4][3], redis_perfs[5][3]]
 #      }
 
-d_redis = {
-    'nb_data': list_nb_data,
-    'Insertion': [redis_perfs[0][0], redis_perfs[1][0], redis_perfs[2][0], redis_perfs[3][0], redis_perfs[4][0], redis_perfs[5][0]], 
-     'Selection': [redis_perfs[0][1],  redis_perfs[1][1], redis_perfs[2][1], redis_perfs[3][1], redis_perfs[4][1], redis_perfs[5][1]], 
-     'Mise a jour': [redis_perfs[0][2],  redis_perfs[1][2], redis_perfs[2][2], redis_perfs[3][2], redis_perfs[4][2], redis_perfs[5][2]], 
-     'Suppression': [redis_perfs[0][3], redis_perfs[1][3], redis_perfs[2][3], redis_perfs[3][3], redis_perfs[4][3], redis_perfs[5][3]]
-     }
+# d_redis = {
+#     'nb_data': list_nb_data,
+#     'Insertion': [redis_perfs[0][0], redis_perfs[1][0], redis_perfs[2][0], redis_perfs[3][0], redis_perfs[4][0], redis_perfs[5][0]], 
+#      'Selection': [redis_perfs[0][1],  redis_perfs[1][1], redis_perfs[2][1], redis_perfs[3][1], redis_perfs[4][1], redis_perfs[5][1]], 
+#      'Mise a jour': [redis_perfs[0][2],  redis_perfs[1][2], redis_perfs[2][2], redis_perfs[3][2], redis_perfs[4][2], redis_perfs[5][2]], 
+#      'Suppression': [redis_perfs[0][3], redis_perfs[1][3], redis_perfs[2][3], redis_perfs[3][3], redis_perfs[4][3], redis_perfs[5][3]]
+#      }
 
-df_redis = pd.DataFrame(data=d_redis)
+# df_redis = pd.DataFrame(data=d_redis)
 
 
 
-#df = px.data.gapminder().query("country=='Canada'")
-fig = px.line(d_redis, x='nb_data', y='Insertion', title='Life expectancy in Canada')
-fig.show()
-
+# #df = px.data.gapminder().query("country=='Canada'")
+# fig = px.line(d_redis, x='nb_data', y='Insertion', title='Life expectancy in Canada')
+# fig.show()

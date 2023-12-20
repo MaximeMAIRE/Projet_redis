@@ -109,3 +109,4 @@ La connexion à Redis est plus lente que pour la base de données sqlite, en rev
 - Indexation
 - Fragmentation & réplication
 - Rapport
+- Samuel a fait un graphique qui vérifie le temps pris pour 100, 1000, 10000 insertions, .... Ca évolue quasi linéairement. 

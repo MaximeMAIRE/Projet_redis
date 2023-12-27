@@ -2,11 +2,10 @@
 # Install
 
 ```
-info@pcj413:~/Documents/redis$ python3 test.py
-info@pcj413:~/Documents/redis$ chmod +x retrieve_data.sh
-info@pcj413:~/Documents/redis$ ./retrieve_data.sh
-Value for key1: value1
-Value for key2: value2
+pip install redis
+sudo apt-get install redis-server
+sudo apt-get install redis-cli
+redis-server --daemonize yes
 ```
 
 ---------------------------------------------------------

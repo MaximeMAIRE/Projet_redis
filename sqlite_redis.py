@@ -1,9 +1,17 @@
 import redis
 import sqlite3
-import plotly.express as px
 import pandas as pd
+import numpy as np
 from datetime import datetime
+import plotly.express as px
+import plotly.io as pio
+import plotly.graph_objects as go
 
+
+def calc(tab):
+    mean = np.average(tab)
+    std = np.std(tab)
+    return mean,std
 
 def launch_all(nb_data):
     print("##################################################")
@@ -56,56 +64,53 @@ def launch_all(nb_data):
         cur.execute("INSERT INTO answer (AnswerText, SurveyID, UserID, QuestionID) VALUES (?, ?, ?, ?)", res)
 
     con.commit()
+    #################################################
     ##################### REDIS #####################
+    #################################################
 
     # Insertion de données dans redis
-    total_time_insertion_redis = 0
+
+    tab_insert_redis = []
     for i in range(nb_data+1, nb_data+1001):
         start_time = datetime.now().timestamp()
         # Utilisation d'une donnée existant réellement dans la base de données
         r.set(i, "(2016, 'mental health survey for 2016', 25, 'Did your previous employers ever formally discuss mental health (as part of a wellness campaign or other official communication)?', 'None did', 2141)")
         end_time = datetime.now().timestamp()
-        total_time_insertion_redis = total_time_insertion_redis + (end_time - start_time)
-
-    total_time_insertion_redis /= 1000
+        tab_insert_redis.append(end_time - start_time)
 
     # Récupération de données dans redis
-    total_time_retrieval_redis = 0
+    tab_retrieval_redis = []
     for i in range(nb_data+1, nb_data+1001):
         start_time = datetime.now().timestamp()
         r.get(i)
         end_time = datetime.now().timestamp()
-        total_time_retrieval_redis = total_time_retrieval_redis + (end_time - start_time)
-
-    total_time_retrieval_redis /= 1000
+        tab_retrieval_redis.append(end_time - start_time)
 
     # Mise à jour de données dans redis
-    total_time_modification_redis = 0
+    tab_update_redis = []
     for i in range(nb_data+1, nb_data+1001):
         start_time = datetime.now().timestamp()
         # Modification d'une donnée existant réellement dans la base de données
         r.set(i, "(2015, 'mental health survey for 2015', 999, 'Have you ever studied computer science?', 'None did', 2141)")
         end_time = datetime.now().timestamp()
-        total_time_modification_redis = total_time_modification_redis + (end_time - start_time)
-
-    total_time_modification_redis /= 1000
+        tab_update_redis.append(end_time - start_time)
 
     # Suppression de données dans redis
-    total_time_deletion_redis = 0
+    tab_delete_redis = []
     for i in range(nb_data+1, nb_data+1001):
         start_time = datetime.now().timestamp()
         r.delete(i)
         end_time = datetime.now().timestamp()
-        total_time_deletion_redis = total_time_deletion_redis + (end_time - start_time)
+        tab_delete_redis.append(end_time - start_time)
 
-    total_time_deletion_redis /= 1000
-
+    ##################################################
     ##################### SQLITE #####################
-
+    ##################################################
+    
     # Insertion de données dans sqlite
-    time_first_insertion_sqlite = 0
-    time_second_insertion_sqlite = 0
-    total_time_insertion_sqlite = 0
+    tab_first_insert_sqlite = []
+    tab_second_insert_sqlite = []
+    tab_total_insert_sqlite = []
     for i in range(nb_data+1, nb_data+1001):
         query_question = "INSERT INTO question (questiontext, QuestionID) VALUES ('Did your previous employers ever formally discuss mental health (as part of a wellness campaign or other official communication)?', '" + str(i) + "');"
         query_answer = "INSERT INTO answer (AnswerText, SurveyID, UserID, QuestionID) VALUES ('None did', 2016, 2141, '" + str(i) + "');"
@@ -116,16 +121,12 @@ def launch_all(nb_data):
         cur.execute(query_answer)
         con.commit()
         end_time = datetime.now().timestamp()
-        time_first_insertion_sqlite = time_first_insertion_sqlite + (intermediate_time - start_time)
-        time_second_insertion_sqlite = time_second_insertion_sqlite + (end_time - intermediate_time)
-        total_time_insertion_sqlite = total_time_insertion_sqlite + (end_time - start_time)
-
-    time_first_insertion_sqlite /= 1000
-    time_second_insertion_sqlite /= 1000
-    total_time_insertion_sqlite /= 1000
+        tab_first_insert_sqlite.append(intermediate_time - start_time)
+        tab_second_insert_sqlite.append(end_time - intermediate_time)
+        tab_total_insert_sqlite.append(((intermediate_time - start_time)+(end_time - intermediate_time)))
 
     # Récupération de données dans sqlite
-    total_time_retrieval_sqlite = 0
+    tab_retrieval_sqlite = []
     for i in range(nb_data+1, nb_data+1001):
         start_time = datetime.now().timestamp()
         ans = cur.execute("SELECT answer.SurveyID, survey.description, answer.QuestionID, question.questiontext, answer.AnswerText, answer.UserID from survey join answer on survey.SurveyId = answer.surveyId join question on question.QuestionID = answer.QuestionID and answer.QuestionID = " + str(i))
@@ -133,14 +134,12 @@ def launch_all(nb_data):
         # print le select
         # for row in ans:
         #     print(row)
-        total_time_retrieval_sqlite = total_time_retrieval_sqlite + (end_time - start_time)
-
-    total_time_retrieval_sqlite /= 1000
+        tab_retrieval_sqlite.append(end_time - start_time)
 
     # Mise à jour de données dans sqlite
-    total_time_modification_sqlite = 0
-    time_first_modification_sqlite = 0
-    time_second_modification_sqlite = 0
+    tab_first_update_sqlite = []
+    tab_second_update_sqlite = []
+    tab_total_update_sqlite = []
     for i in range(nb_data+1, nb_data+1001):
         query_question = "UPDATE question SET questiontext = 'Have you ever studied computer science?', QuestionID = " + str(i+1001) + " WHERE questiontext = 'Did your previous employers ever formally discuss mental health (as part of a wellness campaign or other official communication)?' and QuestionID = " + str(i) + ";"
         query_answer = "UPDATE answer SET SurveyID = 2015, QuestionID = "+ str(i+1001) + " WHERE SurveyID = 2016 AND UserID = 2141 AND AnswerText = 'None did' AND QuestionID = " + str(i) + ";"
@@ -151,13 +150,9 @@ def launch_all(nb_data):
         cur.execute(query_answer)
         con.commit()
         end_time = datetime.now().timestamp()
-        time_first_modification_sqlite = time_first_modification_sqlite + (intermediate_time - start_time)
-        time_second_modification_sqlite = time_second_modification_sqlite + (end_time - intermediate_time)
-        total_time_modification_sqlite = total_time_modification_sqlite + (end_time - start_time)
-
-    time_first_modification_sqlite /= 1000
-    time_second_modification_sqlite /= 1000
-    total_time_modification_sqlite /= 1000
+        tab_first_update_sqlite.append(intermediate_time - start_time)
+        tab_second_update_sqlite.append(end_time - intermediate_time)
+        tab_total_update_sqlite.append(((intermediate_time - start_time)+(end_time - intermediate_time)))
 
     # On vérifie si les données ont bien été modifées dans sqlite
 
@@ -174,9 +169,9 @@ def launch_all(nb_data):
     #     print(row)
 
     # Suppression de données dans sqlite
-    time_first_deletion_sqlite = 0
-    time_second_deletion_sqlite = 0
-    total_time_deletion_sqlite = 0
+    tab_first_delete_sqlite = []
+    tab_second_delete_sqlite = []
+    tab_total_delete_sqlite = []
     for i in range(nb_data+1, nb_data+1001):
         query_delete_question = ("DELETE FROM question where QuestionID = " + str(i+1001))
         query_delete_answer = ("DELETE FROM answer where QuestionID = " + str(i+1001))
@@ -187,13 +182,9 @@ def launch_all(nb_data):
         cur.execute(query_delete_answer)
         con.commit()
         end_time = datetime.now().timestamp()
-        time_first_deletion_sqlite = time_first_deletion_sqlite + (intermediate_time - start_time)
-        time_second_deletion_sqlite = time_second_deletion_sqlite + (end_time - intermediate_time)
-        total_time_deletion_sqlite = total_time_deletion_sqlite + (end_time - start_time)
-        
-    time_first_deletion_sqlite /= 1000
-    time_second_deletion_sqlite /= 1000
-    total_time_deletion_sqlite /= 1000
+        tab_first_delete_sqlite.append(intermediate_time - start_time)
+        tab_second_delete_sqlite.append(end_time - intermediate_time)
+        tab_total_delete_sqlite.append(((intermediate_time - start_time)+(end_time - intermediate_time)))
 
 
     # On vérifie si les données ont bien été supprimées dans sqlite
@@ -209,71 +200,254 @@ def launch_all(nb_data):
     # ans = cur.execute("SELECT * from answer where QuestionID > 236898")
     # for row in ans:
     #     print(row)
-
+    
     con_init.close()
     con.close()
 
-    print(f"Temps d'insertion en moyenne sur mille données sur Redis:                 {total_time_insertion_redis:.8f} secondes.")
-    print(f"Temps de récupération en moyenne sur mille données sur Redis:             {total_time_retrieval_redis:.8f} secondes.")
-    print(f"Temps de modification en moyenne sur mille données sur Redis:             {total_time_modification_redis:.8f} secondes.")
-    print(f"Temps de suppression en moyenne sur mille données sur Redis:              {total_time_deletion_redis:.8f} secondes.")
-
-    print(f"Temps d'insertion en moyenne sur mille données sur SQLite:                {total_time_insertion_sqlite:.8f} secondes.")
-    print(f"--- Temps d'insertion de la première table en moyenne sur mille données sur SQLite: {time_first_insertion_sqlite:.8f} secondes.")
-    print(f"--- Temps d'insertion de la seconde table en moyenne sur mille données sur SQLite:  {time_second_insertion_sqlite:.8f} secondes.")
-    print(f"Temps de récupération en moyenne sur mille données sur SQLite:            {total_time_retrieval_sqlite:.8f} secondes.")
-    print(f"Temps de modification en moyenne sur mille données sur SQLite:            {total_time_modification_sqlite:.8f} secondes.")
-    print(f"--- Temps de modification de la première table en moyenne sur mille données sur SQLite: {time_first_modification_sqlite:.8f} secondes.")
-    print(f"--- Temps de modification de la seconde table en moyenne sur mille données sur SQLite:  {time_second_modification_sqlite:.8f} secondes.")
-    print(f"Temps de suppression en moyenne sur mille données sur SQLite:             {total_time_deletion_sqlite:.8f} secondes.")
-    print(f"--- Temps de suppression de la première table en moyenne sur mille données sur SQLite:  {time_first_deletion_sqlite:.8f} secondes.")
-    print(f"--- Temps de suppression de la seconde table en moyenne sur mille données sur SQLite:   {time_second_deletion_sqlite:.8f} secondes.\n\n")
-
-
-
-
     r.flushall()
 
-    return [[total_time_insertion_redis, total_time_retrieval_redis, total_time_modification_redis, total_time_deletion_redis], 
-            [total_time_insertion_sqlite, time_first_insertion_sqlite, time_second_insertion_sqlite, total_time_retrieval_sqlite,
-            total_time_modification_sqlite, time_first_modification_sqlite, time_second_modification_sqlite, total_time_deletion_sqlite,
-            time_first_deletion_sqlite, time_second_deletion_sqlite]]
+    calc(tab_total_insert_sqlite)
+    calc(tab_retrieval_sqlite)
+    calc(tab_total_update_sqlite)
+    calc(tab_total_delete_sqlite)
+    return [[tab_insert_redis, tab_retrieval_redis, tab_update_redis, tab_delete_redis], 
+            [tab_total_insert_sqlite, tab_first_insert_sqlite, tab_second_insert_sqlite, tab_retrieval_sqlite,
+            tab_total_update_sqlite, tab_first_update_sqlite, tab_second_insert_sqlite, tab_total_delete_sqlite,
+            tab_first_delete_sqlite, tab_second_delete_sqlite]]
+    
 
+'''
+tab un tableau
+int un entier compris dans [0;3]: 0 = insert; 1 = retrieval; 2 = update; 3 = delete
+'''
+def print_and_return_redis_perfs(tab,i):
+    mean, sd = calc(tab)
+    if i == 0:
+        print(f"Temps d'insert en moyenne sur 1000 données sur Redis:             {mean:.8f} s. Écart-type : {sd:.8f}")
+    elif i==1:
+        print(f"Temps de récup en moyenne sur 1000 données sur Redis:             {mean:.8f} s. Écart-type : {sd:.8f}")
+    elif i==2:
+        print(f"Temps de modif en moyenne sur 1000 données sur Redis:             {mean:.8f} s. Écart-type : {sd:.8f}")
+    elif i==3:
+        print(f"Temps de suppr en moyenne sur 1000 données sur Redis:             {mean:.8f} s. Écart-type : {sd:.8f}")
+    return [mean, sd]
 
+def print_and_return_sqlite_perfs(tabt,tabf,tabs,i):
+    meant, sdt = calc(tabt)
+    meanf, sdf = calc(tabf)
+    means, sds = calc(tabs)
+    if i == 0:
+        print(f"Temps d'insert en moyenne sur 1000 données sur SQLite:             {meant:.8f} s. Écart-type : {sdt:.8f}")
+        print(f"Temps d'insert de la 1ere table en moyenne sur 1000 données sur SQLite: {meanf:.8f} s. Écart-type : {sdf:.8f}")
+        print(f"Temps d'insert de la 2eme table en moyenne sur 1000 données sur SQLite:  {means:.8f} s. Écart-type : {sds:.8f}")
+    elif i == 1:
+        print(f"Temps de modif en moyenne sur 1000 données sur SQLite:             {meant:.8f} s. Écart-type : {sdt:.8f}")
+        print(f" Temps de modif de la 1ere table en moyenne sur 1000 données sur SQLite: {meanf:.8f} s. Écart-type : {sdf:.8f}")
+        print(f" Temps de modif de la 2eme table en moyenne sur 1000 données sur SQLite:  {means:.8f} s. Écart-type : {sds:.8f}")
+    elif i == 2:
+        print(f"Temps de suppr en moyenne sur 1000 données sur SQLite:             {meant:.8f} s. Écart-type : {sdt:.8f}")
+        print(f" Temps de suppr de la 1ere table en moyenne sur 1000 données sur SQLite:  {meanf:.8f} s. Écart-type : {sdf:.8f}")
+        print(f" Temps de suppr de la 2eme table en moyenne sur 1000 données sur SQLite:   {means:.8f} s. Écart-type : {sds:.8f}\n\n")
+    return [meant, sdt]
 
+def mean_std(tab,tab2,x):
+    result = []
+    if x == 0:
+        for i in range(len(tab)):
+            result.append(tab[i] + tab2[i])
+    else:
+        for i in range(len(tab)):
+            result.append(tab[i] - tab2[i])
+    return result
 
 list_nb_data = [2000, 25000, 50000, 75000, 100000, 125000, 150000, 175000, 200000]
-redis_perfs = []
-sqlite_perfs = []
+
+mean_redis_insert = []
+sd_redis_insert = []
+mean_redis_retrieval = []
+sd_redis_retrieval = []
+mean_redis_update = []
+sd_redis_update = []
+mean_redis_delete = []
+sd_redis_delete = []
+
+mean_sqlite_insert = []
+sd_sqlite_insert = []
+mean_sqlite_retrieval = []
+sd_sqlite_retrieval = []
+mean_sqlite_update = []
+sd_sqlite_update = []
+mean_sqlite_delete = []
+sd_sqlite_delete = []
+
 for data in list_nb_data:
     perfs = launch_all(data)
-    redis_perfs.append(perfs[0])
-    sqlite_perfs.append(perfs[1])
+    x,y = print_and_return_redis_perfs(perfs[0][0],0)
+    mean_redis_insert.append(x)
+    sd_redis_insert.append(y)
+    x,y = print_and_return_redis_perfs(perfs[0][1],1)
+    mean_redis_retrieval.append(x)
+    sd_redis_retrieval.append(y)
+    x,y = print_and_return_redis_perfs(perfs[0][2],2)
+    mean_redis_update.append(x)
+    sd_redis_update.append(y)
+    x,y = print_and_return_redis_perfs(perfs[0][3],3)
+    mean_redis_delete.append(x)
+    sd_redis_delete.append(y)
 
-d_redis = {
+    
+    x,y = calc(perfs[1][3])
+    print(f"Temps de récup en moyenne sur 1000 données sur SQLite:            {x:.8f} s. Écart-type : {y:.8f}")
+    mean_sqlite_retrieval.append(x)
+    sd_sqlite_retrieval.append(y)
+    x,y = print_and_return_sqlite_perfs(perfs[1][0],perfs[1][1],perfs[1][2],0)
+    mean_sqlite_insert.append(x)
+    sd_sqlite_insert.append(y)
+    x,y = print_and_return_sqlite_perfs(perfs[1][4],perfs[1][5],perfs[1][6],1)
+    mean_sqlite_update.append(x)
+    sd_sqlite_update.append(y)
+    x,y = print_and_return_sqlite_perfs(perfs[1][7],perfs[1][8],perfs[1][9],2)
+    mean_sqlite_delete.append(x)
+    sd_sqlite_delete.append(y)
+
+sum_meanstd_redis_insert = mean_std(mean_redis_insert,sd_redis_insert,0)
+sum_meanstd_redis_retrieval = mean_std(mean_redis_retrieval,sd_redis_retrieval,0)
+sum_meanstd_redis_update = mean_std(mean_redis_update,sd_redis_update,0)
+sum_meanstd_redis_delete = mean_std(mean_redis_delete,sd_redis_delete,0)
+sum_meanstd_redis_insert_neg = mean_std(mean_redis_insert,sd_redis_insert,1)
+sum_meanstd_redis_retrieval_neg = mean_std(mean_redis_retrieval,sd_redis_retrieval,1)
+sum_meanstd_redis_update_neg = mean_std(mean_redis_update,sd_redis_update,1)
+sum_meanstd_redis_delete_neg = mean_std(mean_redis_delete,sd_redis_delete,1)
+
+liste_l = ['nb_data','Insertion',"Selection","Mise a jour","Suppression",
+           'Insertion_std_borne_supp',"Selection_std_borne_supp","Mise a jour_std_borne_supp","Suppression_std_borne_supp",
+           'Insertion_std_borne_inf',"Selection_std_borne_inf","Mise a jour_std_borne_inf","Suppression_std_borne_inf"]
+
+d_redis_m = {
     'nb_data': list_nb_data,
-    'Insertion': [redis_perfs[0][0], redis_perfs[1][0], redis_perfs[2][0], redis_perfs[3][0], redis_perfs[4][0], redis_perfs[5][0], redis_perfs[6][0], redis_perfs[7][0], redis_perfs[8][0]], 
-    'Selection': [redis_perfs[0][1],  redis_perfs[1][1], redis_perfs[2][1], redis_perfs[3][1], redis_perfs[4][1], redis_perfs[5][1], redis_perfs[6][1], redis_perfs[7][1], redis_perfs[8][1]], 
-    'Mise à jour': [redis_perfs[0][2],  redis_perfs[1][2], redis_perfs[2][2], redis_perfs[3][2], redis_perfs[4][2], redis_perfs[5][2], redis_perfs[6][2], redis_perfs[7][2], redis_perfs[8][2]], 
-    'Suppression': [redis_perfs[0][3], redis_perfs[1][3], redis_perfs[2][3], redis_perfs[3][3], redis_perfs[4][3], redis_perfs[5][3], redis_perfs[6][3], redis_perfs[7][3], redis_perfs[8][3]]
+    'Insertion': mean_redis_insert,
+    'Selection': mean_redis_retrieval,
+    'Mise a jour': mean_redis_update,
+    'Suppression': mean_redis_delete,
+    'Insertion_std_borne_supp': sum_meanstd_redis_insert,
+    'Selection_std_borne_supp': sum_meanstd_redis_retrieval,
+    'Mise a jour_std_borne_supp': sum_meanstd_redis_update,
+    'Suppression_std_borne_supp': sum_meanstd_redis_delete,
+    'Insertion_std_borne_inf': sum_meanstd_redis_insert_neg,
+    'Selection_std_borne_inf': sum_meanstd_redis_retrieval_neg,
+    'Mise a jour_std_borne_inf': sum_meanstd_redis_update_neg,
+    'Suppression_std_borne_inf': sum_meanstd_redis_delete_neg
 }
 
-df_redis = pd.DataFrame(data=d_redis)
+df_redis_m = pd.DataFrame(data=d_redis_m)
+fig = go.Figure()
+
+fig.add_trace(go.Scatter(x=df_redis_m['nb_data'], y=df_redis_m['Insertion'],
+                         line=dict(color='blue'), mode='lines', name='Insertion'))
+
+fig.add_trace(go.Scatter(x=df_redis_m['nb_data'], y=df_redis_m['Suppression'],
+                         line=dict(color='red'), mode='lines', name='Suppression'))
+
+fig.add_trace(go.Scatter(x=df_redis_m['nb_data'], y=df_redis_m['Mise a jour'],
+                         line=dict(color='green'), mode='lines', name='Mise a jour'))
+
+fig.add_trace(go.Scatter(x=df_redis_m['nb_data'], y=df_redis_m['Selection'],
+                         line=dict(color='purple'), mode='lines', name='Récupération'))
+
+fig.add_trace(go.Scatter(x=df_redis_m['nb_data'].tolist() + df_redis_m['nb_data'].tolist()[::-1],
+                         y=df_redis_m['Insertion_std_borne_supp'].tolist() + df_redis_m['Insertion_std_borne_inf'].tolist()[::-1],
+                         fill='toself', fillcolor='rgba(0,100,80,0.2)',
+                         line=dict(color='rgba(255,255,255,0)'), name='Insertion Intervalle'))
+
+fig.add_trace(go.Scatter(x=df_redis_m['nb_data'].tolist() + df_redis_m['nb_data'].tolist()[::-1],
+                         y=df_redis_m['Suppression_std_borne_supp'].tolist() + df_redis_m['Suppression_std_borne_inf'].tolist()[::-1],
+                         fill='toself', fillcolor='rgba(255,0,0,0.2)',
+                         line=dict(color='rgba(255,255,255,0)'), name='Suppression Intervalle'))
+
+fig.add_trace(go.Scatter(x=df_redis_m['nb_data'].tolist() + df_redis_m['nb_data'].tolist()[::-1],
+                         y=df_redis_m['Mise a jour_std_borne_supp'].tolist() + df_redis_m['Mise a jour_std_borne_inf'].tolist()[::-1],
+                         fill='toself', fillcolor='rgba(0,255,0,0.2)',
+                         line=dict(color='rgba(255,255,255,0)'), name='Mise a jour Intervalle'))
+
+fig.add_trace(go.Scatter(x=df_redis_m['nb_data'].tolist() + df_redis_m['nb_data'].tolist()[::-1],
+                         y=df_redis_m['Selection_std_borne_supp'].tolist() + df_redis_m['Selection_std_borne_inf'].tolist()[::-1],
+                         fill='toself', fillcolor='rgba(128,0,128,0.2)',
+                         line=dict(color='rgba(255,255,255,0)'), name='Récupération Intervalle'))
+
+fig.update_layout(
+    title='Performance evolution with redis',
+    xaxis_title='nb_data',
+    yaxis_title='Values',
+)
 
 
-fig = px.line(df_redis, x='nb_data', y=['Insertion', 'Selection', 'Mise à jour', 'Suppression'], title='Performance evolution with redis')
-fig.show()
+pio.write_html(fig, file='graphe_redis.html', auto_open=True)
+
+sum_meanstd_sqlite_insert = mean_std(mean_sqlite_insert,sd_sqlite_insert,0)
+sum_meanstd_sqlite_retrieval = mean_std(mean_sqlite_retrieval,sd_sqlite_retrieval,0)
+sum_meanstd_sqlite_update = mean_std(mean_sqlite_update,sd_sqlite_update,0)
+sum_meanstd_sqlite_delete = mean_std(mean_sqlite_delete,sd_sqlite_delete,0)
+sum_meanstd_sqlite_insert_neg = mean_std(mean_sqlite_insert,sd_sqlite_insert,1)
+sum_meanstd_sqlite_retrieval_neg = mean_std(mean_sqlite_retrieval,sd_sqlite_retrieval,1)
+sum_meanstd_sqlite_update_neg = mean_std(mean_sqlite_update,sd_sqlite_update,1)
+sum_meanstd_sqlite_delete_neg = mean_std(mean_sqlite_delete,sd_sqlite_delete,1)
 
 d_sqlite = {
     'nb_data': list_nb_data,
-    'Insertion': [sqlite_perfs[0][0], sqlite_perfs[1][0], sqlite_perfs[2][0], sqlite_perfs[3][0], sqlite_perfs[4][0], sqlite_perfs[5][0], sqlite_perfs[6][0], sqlite_perfs[7][0], sqlite_perfs[8][0]], 
-    'Selection': [sqlite_perfs[0][3],  sqlite_perfs[1][3], sqlite_perfs[2][3], sqlite_perfs[3][3], sqlite_perfs[4][3], sqlite_perfs[5][3], sqlite_perfs[6][3], sqlite_perfs[7][3], sqlite_perfs[8][3]], 
-    'Mise à jour': [sqlite_perfs[0][4],  sqlite_perfs[1][4], sqlite_perfs[2][4], sqlite_perfs[3][4], sqlite_perfs[4][4], sqlite_perfs[5][4], sqlite_perfs[6][4], sqlite_perfs[7][4], sqlite_perfs[8][4]], 
-    'Suppression': [sqlite_perfs[0][7], sqlite_perfs[1][7], sqlite_perfs[2][7], sqlite_perfs[3][7], sqlite_perfs[4][7], sqlite_perfs[5][7], sqlite_perfs[6][7], sqlite_perfs[7][7], sqlite_perfs[8][7]]
+    'Insertion': mean_sqlite_insert, 
+    'Selection': mean_sqlite_retrieval, 
+    'Mise a jour': mean_sqlite_update, 
+    'Suppression': mean_sqlite_delete,
+    'Insertion_std_borne_supp': sum_meanstd_sqlite_insert,
+    'Selection_std_borne_supp': sum_meanstd_sqlite_retrieval,
+    'Mise a jour_std_borne_supp': sum_meanstd_sqlite_update,
+    'Suppression_std_borne_supp': sum_meanstd_sqlite_delete,
+    'Insertion_std_borne_inf': sum_meanstd_sqlite_insert_neg,
+    'Selection_std_borne_inf': sum_meanstd_sqlite_retrieval_neg,
+    'Mise a jour_std_borne_inf': sum_meanstd_sqlite_update_neg,
+    'Suppression_std_borne_inf': sum_meanstd_sqlite_delete_neg
 }
 
+
 df_sqlite = pd.DataFrame(data=d_sqlite)
+fig = go.Figure()
 
+fig.add_trace(go.Scatter(x=df_sqlite['nb_data'], y=df_sqlite['Insertion'],
+                         line=dict(color='blue'), mode='lines', name='Insertion'))
 
-fig = px.line(df_sqlite, x='nb_data', y=['Insertion', 'Selection', 'Mise à jour', 'Suppression'], title='Performance evolution with sqlite')
-fig.show()
+fig.add_trace(go.Scatter(x=df_sqlite['nb_data'], y=df_sqlite['Suppression'],
+                         line=dict(color='red'), mode='lines', name='Suppression'))
+
+fig.add_trace(go.Scatter(x=df_sqlite['nb_data'], y=df_sqlite['Mise a jour'],
+                         line=dict(color='green'), mode='lines', name='Mise a jour'))
+
+fig.add_trace(go.Scatter(x=df_sqlite['nb_data'], y=df_sqlite['Selection'],
+                         line=dict(color='purple'), mode='lines', name='Récupération'))
+
+fig.add_trace(go.Scatter(x=df_sqlite['nb_data'].tolist() + df_sqlite['nb_data'].tolist()[::-1],
+                         y=df_sqlite['Insertion_std_borne_supp'].tolist() + df_sqlite['Insertion_std_borne_inf'].tolist()[::-1],
+                         fill='toself', fillcolor='rgba(0,100,80,0.2)',
+                         line=dict(color='rgba(255,255,255,0)'), name='Insertion Intervalle'))
+
+fig.add_trace(go.Scatter(x=df_sqlite['nb_data'].tolist() + df_sqlite['nb_data'].tolist()[::-1],
+                         y=df_sqlite['Suppression_std_borne_supp'].tolist() + df_sqlite['Suppression_std_borne_inf'].tolist()[::-1],
+                         fill='toself', fillcolor='rgba(255,0,0,0.2)',
+                         line=dict(color='rgba(255,255,255,0)'), name='Suppression Intervalle'))
+
+fig.add_trace(go.Scatter(x=df_sqlite['nb_data'].tolist() + df_sqlite['nb_data'].tolist()[::-1],
+                         y=df_sqlite['Mise a jour_std_borne_supp'].tolist() + df_sqlite['Mise a jour_std_borne_inf'].tolist()[::-1],
+                         fill='toself', fillcolor='rgba(0,255,0,0.2)',
+                         line=dict(color='rgba(255,255,255,0)'), name='Mise a jour Intervalle'))
+
+fig.add_trace(go.Scatter(x=df_sqlite['nb_data'].tolist() + df_sqlite['nb_data'].tolist()[::-1],
+                         y=df_sqlite['Selection_std_borne_supp'].tolist() + df_sqlite['Selection_std_borne_inf'].tolist()[::-1],
+                         fill='toself', fillcolor='rgba(128,0,128,0.2)',
+                         line=dict(color='rgba(255,255,255,0)'), name='Récupération Intervalle'))
+
+fig.update_layout(
+    title='Performance evolution with redis',
+    xaxis_title='nb_data',
+    yaxis_title='Values',
+)
+
+pio.write_html(fig, file='graphe_sqlite.html', auto_open=True)
